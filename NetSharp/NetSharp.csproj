@@ -59,10 +59,10 @@
     <Compile Include="Communications\Connection.cs" />
     <Compile Include="Communications\Initialization.cs" />
     <Compile Include="Exceptions.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Util\Logger.cs" />
     <Compile Include="NetSharpProtocol.cs" />
     <Compile Include="ReconnectManager.cs" />
-    <Compile Include="RecordOnce.cs" />
+    <Compile Include="Util\RecordOnce.cs" />
     <Compile Include="ServerSide\Acceptor.cs" />
     <Compile Include="ServerSide\AcceptorManager.cs" />
     <Compile Include="ServerSide\ConnectedClientManager.cs" />
@@ -72,7 +72,7 @@
     <Compile Include="ServerSide\Host.cs" />
     <Compile Include="ServerSide\PreprocessingConnection.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SimpleLock.cs" />
+    <Compile Include="Util\SimpleLock.cs" />
     <Compile Include="SocketExtension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
