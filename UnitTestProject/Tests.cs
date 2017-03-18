@@ -153,40 +153,6 @@ namespace NetSharp.UnitTest
             {
                 host.Close();
             }
-
-            using (SimpleClient client = new SimpleClient())
-            {
-                //FakeAcceptor acceptor9000 = new FakeAcceptor(9000, (con, conClient) => new CommandHandler(con, conClient));
-                //FakeAcceptor acceptor9001 = new FakeAcceptor(9001, (con, conClient) => new AnotherHandler(con, conClient));
-
-                //AcceptorManager.Add(acceptor9000);
-                //AcceptorManager.Add(acceptor9001);
-
-                //client.ConnectAsync().Wait();
-
-                //IConnection connection = client.TakeConnection(9001).Result;
-
-                //using (CommunicationObject comObj = new CommunicationObject(connection))
-                //{
-                //    FileData fileDataExp = new FileData("fileName.txt", 1024);
-                //    short commandCode = 5;
-                //    short errorCode = 4;
-                //    int lengthData;
-
-                //    comObj.SetData(commandCode, errorCode, fileDataExp);
-                //    lengthData = comObj.LengthData;
-
-                //    comObj.SendAsync().Wait();
-                //    comObj.ReceiveAsync().Wait();
-
-                //    FileData fileDataActual = comObj.GetData<FileData>();
-
-                //    Assert.AreEqual(commandCode, comObj.CommandCode);
-                //    Assert.AreEqual(errorCode, comObj.ErrorCode);
-                //    Assert.AreEqual(lengthData, comObj.LengthData);
-                //    Assert.AreEqual(fileDataExp, fileDataActual);
-                //}
-            }
         }
 
         [Test]
