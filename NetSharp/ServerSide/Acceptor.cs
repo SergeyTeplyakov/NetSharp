@@ -44,18 +44,36 @@ namespace NetSharp.ServerSide
         /// <summary>
         /// Запуск предобработки.
         /// </summary>
-        protected void StartPreprocessingConnection(Socket socket)
+        async Task StartPreprocessingConnection(Socket socket)
         {
-            preprocessingConnection.Start(socket, handlerFactory);
+            await preprocessingConnection.Start(socket, handlerFactory).ConfigureAwait(false);
+        }
+
+        void AcceptConnection()
+        {
+            Task<Socket> waitConnectionTask = socketServer.AcceptTaskAsync();
+
+            waitConnectionTask.ContinueWith(async task =>
+            {
+                Socket socketClient = task.Result;
+
+                if (task.Exception == null)
+                {
+                    if (isActive)
+                        AcceptConnection();
+                    
+                    Logger.Write(Source.Server, $"Новое подключение. Удалённая конечная точка: {socketClient.RemoteEndPoint}");
+
+                    await StartPreprocessingConnection(socketClient).ConfigureAwait(false);
+                }
+            });
         }
 
         /// <summary>
         /// Запуск прослушивания входящих подключений.
         /// </summary>
-        public async Task Open()
+        public void Open()
         {
-            Socket socketClient = null;
-
             try
             {
                 socketServer.Bind(LocalIPEndPoint);
@@ -82,25 +100,7 @@ namespace NetSharp.ServerSide
 
             Logger.Write(Source.Server, $"Порт открыт. Локальная конечная точка: {LocalIPEndPoint}");
 
-            //Цикл прослушивания входящих подключений.
-            while (isActive)
-            {
-                try
-                {
-                    socketClient = await socketServer.AcceptTaskAsync().ConfigureAwait(false);
-
-                    Logger.Write(Source.Server, $"Новое подключение. Удалённая конечная точка: {socketClient.RemoteEndPoint}");
-
-                    StartPreprocessingConnection(socketClient);
-                }
-                catch (ObjectDisposedException ex)
-                {
-                    if (isActive)
-                        throw new AcceptorException("Неожиданное завершение работы ассептора.", ex);
-                    else
-                        break;
-                }
-            }
+            AcceptConnection();
         }
 
         public void Close()
@@ -108,10 +108,7 @@ namespace NetSharp.ServerSide
             isActive = false;
 
             if (socketServer != null)
-            {
                 socketServer.Close();
-                socketServer = null;
-            }
         }
     }
 }

@@ -29,8 +29,7 @@ namespace NetSharp.ServerSide
     public class Host
     {
         const int BACKLOG = 10;
-        Task allTasks;
-
+        
         internal readonly AcceptorManager AcceptorManager;
         internal readonly ConnectedClientManager ClientManager;
 
@@ -68,20 +67,8 @@ namespace NetSharp.ServerSide
 
         public void Open()
         {
-            Task[] tasks = new Task[AcceptorManager.Count];
-            int i = 0;
-
             foreach (Acceptor acceptor in AcceptorManager)
-            {
-                tasks[i] = acceptor.Open();
-
-                if (tasks[i].Exception != null)
-                    throw tasks[i].Exception;
-
-                i++;
-            }
-
-            allTasks = Task.WhenAll(tasks);
+                acceptor.Open();
 
             RaiseHostStateChange(this, ReasonChange.HostOpen);
         }
@@ -94,9 +81,6 @@ namespace NetSharp.ServerSide
         public void Close()
         {
             AcceptorManager.CloseAll();
-
-            if (allTasks != null)
-                allTasks.Wait();
 
             ClientManager.RemoveAll();
 
