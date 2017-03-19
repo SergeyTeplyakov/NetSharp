@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace NetSharp.ServerSide
 {
+    /// <summary>
+    /// Является хранилищем подключённых клиентов и позволяет управлять ими.
+    /// </summary>
     public class ConnectedClientManager
     {
         readonly Host host;

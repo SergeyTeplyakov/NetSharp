@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using NetSharp.Communications;
 
 namespace NetSharp.ServerSide
 {
+    /// <summary>
+    /// Причина изменения состояния сервера.
+    /// </summary>
     public enum ReasonChange
     {
         AddAcceptor, RemoveAcceptor,
@@ -14,9 +16,18 @@ namespace NetSharp.ServerSide
         AddHandler, RemoveHandler
     }
 
+    /// <summary>
+    /// Аргументы для события изменения состояния сервера.
+    /// </summary>
     public class HostStateChangeArgs : EventArgs
     {
+        /// <summary>
+        /// Причина изменения.
+        /// </summary>
         public ReasonChange Reason { get; private set; }
+        /// <summary>
+        /// Связанный с причиной изменения состояния сервера объект.
+        /// </summary>
         public object Value { get; private set; }
 
         public HostStateChangeArgs(ReasonChange reason, object value)
@@ -41,7 +52,7 @@ namespace NetSharp.ServerSide
         {
             if (listenAddress == null)
                 throw new ArgumentNullException(nameof(listenAddress));
-            
+                
             ListenAddress = listenAddress;
             AcceptorManager = new AcceptorManager(this);
             ClientManager = new ConnectedClientManager(this);

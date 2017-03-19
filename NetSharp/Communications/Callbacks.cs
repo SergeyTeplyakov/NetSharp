@@ -20,7 +20,7 @@ namespace NetSharp.Communications.Callbacks
 
         public abstract Task Invoke();
 
-        protected static void ResponseErrorCheck(string text, short code)
+        protected static void ResponseErrorCheckAndThrow(string text, short code)
         {
             switch (code)
             {
@@ -89,7 +89,7 @@ namespace NetSharp.Communications.Callbacks
             if (init.CommandCode == NetSharpProtocol.Commands.ACCEPT)
                 Result = init.GetClientOrHandlerID(); //Получаю ID обработчика.
             else if (init.CommandCode == NetSharpProtocol.Commands.DENY)
-                ResponseErrorCheck(text, init.ErrorCode);
+                ResponseErrorCheckAndThrow(text, init.ErrorCode);
             else
                 throw new CommunicationException($"{text}: получен неизвестный код ответа сервера.");
         }
@@ -132,7 +132,7 @@ namespace NetSharp.Communications.Callbacks
             await init.ReceiveAsyncControlCommand().ConfigureAwait(false);
 
             if (init.CommandCode == NetSharpProtocol.Commands.DENY)
-                ResponseErrorCheck(text, init.ErrorCode);
+                ResponseErrorCheckAndThrow(text, init.ErrorCode);
             else if (init.CommandCode != NetSharpProtocol.Commands.ACCEPT)
                 throw new CommunicationException($"{text}: неизвестный код ответа сервера. Код ответа: {init.CommandCode}.");
         }

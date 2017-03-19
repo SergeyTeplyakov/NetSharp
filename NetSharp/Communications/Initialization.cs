@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace NetSharp.Communications
 {
+    /// <summary>
+    /// Содержит логику необходимую в процессе подключения клиента к серверу.
+    /// </summary>
     class Initialization
     {
         const short IDS_BUFFER_SIZE = 32;

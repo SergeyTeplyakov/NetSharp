@@ -8,6 +8,11 @@ using NetSharp.Communications.Callbacks;
 
 namespace NetSharp.Communications
 {
+    /// <summary>
+    /// Инкапсулирует логику работы с сетью по протоколу TCP/IP включая установление 
+    /// соединения и его разрыв, а также передачу и приём данных. Поддерживает контроль работоспособности
+    /// соединения и его восстановления в случае разрыва.
+    /// </summary>
     public class Connection
     {
         IPEndPoint remoteEndPoint;
@@ -284,12 +289,23 @@ namespace NetSharp.Communications
                  *   активным в тот момент методом ReceiveAsync объекта CommunicationObject.
                  *4) transferActive==false на клиенте и transferActive==false на сервере - сигнал проверки будет послан клиентом и обработан
                  *   методом проверки.*/
+
+                //Если активны приём/передача данных или соединение не установлено, проверка производится не будет.
                 if (connection.transferActive || !connection.IsConnected)
                     return;
 
                 checkConnection = true;
+
+                /*Одновременный доступ к сокету из нескольких потоков для приема или передачи данных не допустим,
+                 поэтому перед началом проверки необходимо вызвать блокировку во избежание возможных коллизий.
+                 Если во время проверки, в потоке X будет вызван метод InternalReceiveAsync или InternalSendAsync, то
+                 поток X будет заблокирован до окончания проверки подключения.*/
                 mres.Reset();
 
+                /*Значение этой переменной локальной для потока в потоке, где проиводится вызов
+                 метода IsCheckedConnection будет равно true, т.о. в этом потоке будет вызвана блокировка;
+                 в потоке обрабатывающего событие таймера значение этой переменной будет равно false,
+                 т.о. блокировка в методах ReceivePulse и SendPulse не будет вызвана.*/
                 requiredConnectionCheck.Value = false;
 
                 Data data = Data.Create();
@@ -315,7 +331,6 @@ namespace NetSharp.Communications
 
                     checkConnectionException = ex;
                     checkConnectionTimer.Dispose();
-                    checkConnectionTimer = null;
                 }
                 finally
                 {
