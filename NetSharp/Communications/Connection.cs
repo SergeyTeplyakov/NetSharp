@@ -341,12 +341,9 @@ namespace NetSharp.Communications
 
             bool ErrorCodeCheck(SocketException ex)
             {
-                if (ex != null && (ex.SocketErrorCode == SocketError.ConnectionReset ||
+                return ex != null && (ex.SocketErrorCode == SocketError.ConnectionReset ||
                     ex.SocketErrorCode == SocketError.ConnectionAborted ||
-                    ex.SocketErrorCode == SocketError.TimedOut))
-                    return true;
-                else
-                    return false;
+                    ex.SocketErrorCode == SocketError.TimedOut);
             }
 
             async Task Reconnect()
@@ -453,6 +450,11 @@ namespace NetSharp.Communications
                 {
                     throw new CommunicationException("Ошибка при приёме/передаче данных.", ex);
                 }
+            }
+
+            public void ImmediatelyStartConnectionCheck()
+            {
+                checkConnectionTimer.Change(TimeSpan.Zero, Timeout.InfiniteTimeSpan);
             }
 
             public void IsCheckedConnection()
