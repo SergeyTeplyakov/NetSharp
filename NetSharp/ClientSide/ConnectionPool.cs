@@ -8,25 +8,33 @@ using NetSharp.Communications;
 
 namespace NetSharp.ClientSide
 {
+    // Лучше: ObjectPool
     public abstract class Pool<K, T, F>
     {
         int instanceCount;
 
         public int InstanceCount => instanceCount;
 
+        // Имя плохое.
         protected readonly ConcurrentDictionary<K, T> map;
 
         protected Pool()
         {
+            // map принимает comparer и именно так и нужно делать.
             map = new ConcurrentDictionary<K, T>();
         }
 
+        // Лучше принимать Comparer в виде Func-а. Посмотри на коллекции, или на тот же HashSet
         protected abstract bool Compare(F key, T value);
 
         protected bool TryRemove(F key, out T item)
         {
             item = default(T);
 
+            // Это очень странный код.
+            // Вся идея Map-а здесь потеряна. Как уже написал, нужно использовать конструктор словаря,
+            // который принимает компарер.
+            // Посмотри ObjectPool в Roslyn
             foreach (var pair in map)
                 if (Compare(key, pair.Value) && map.TryRemove(pair.Key, out item))
                     return true;

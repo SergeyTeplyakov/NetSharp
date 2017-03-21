@@ -9,6 +9,7 @@ namespace NetSharp
     {
         public static Task ConnectTaskAsync(this Socket socket, IPEndPoint remoteEP)
         {
+            //socket.ConnectAsync
             return Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, remoteEP, null);
         }
 

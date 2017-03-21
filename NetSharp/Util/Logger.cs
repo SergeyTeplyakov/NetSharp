@@ -11,6 +11,9 @@ namespace NetSharp
     {
         static Action<DateTime, Source, string, Exception, Data> logWriter;
 
+        // Это очень странный логгер.
+        // Если нужно абстрагировать что-то от чего-то, то лучше добавить ILogger интерфейс
+        // Делагаты с таким числом параметров - это перебор.
         public static Action<DateTime, Source, string, Exception, Data> LogWriter
         {
             get
@@ -26,14 +29,24 @@ namespace NetSharp
             }
         }
 
+        // Дизайн логгера - очень странный. Тип открытый, но единственное, что с ним можно сделать через
+        // открытый интерфейс - установить Logger. Но вызвать Write - нельзя.
+        // Тут нужны отдельные уровни, нужны отдельные метод WriteInfo, WriteError, WriteWarning
+        // Нужно посмотреть стандартные логгеры.
         internal static void Write(Source source, string message, Exception ex = null, Data data = null)
         {
             logWriter?.Invoke(DateTime.Now, source, message, ex, data);
         }
     }
 
+    // Имя - очень плохое. 
+    // Все, что угодно - это данные.
     public class Data
     {
+        // Все очень мутабельное, жить с этим будет сложно.
+        // Я бы посоветовал делать фабрики, которые будут инициализировать нужные данные.
+        
+        // в чем смысл словаря? Расширябельность? Может начать с простого, а потом расширить?
         Dictionary<string, bool> changeFields;
 
         public string HandlerName { get; private set; }

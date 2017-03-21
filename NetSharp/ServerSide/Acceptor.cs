@@ -49,6 +49,7 @@ namespace NetSharp.ServerSide
             await preprocessingConnection.Start(socket, handlerFactory).ConfigureAwait(false);
         }
 
+        // Метод должен быть асинхронным
         void AcceptConnection()
         {
             Task<Socket> waitConnectionTask = socketServer.AcceptTaskAsync();

@@ -2,6 +2,11 @@
 
 namespace NetSharp
 {
+    // Культ-карго: нет мысла делать все конструкторы для исключений. Нужно использовать лишь те, что нужны.
+    // Например, конструкторы, которые принимают SerializationInfo нужны только если исключения будут пересекать границы домена
+    // Не уверен, что это нужно.
+
+    // ApplicationExeption considered harmful. лучше наследоваться от System.Exception. Легкое гугление должно дать больше ссылок.
     [Serializable]
     public class CommunicationException : ApplicationException
     {
@@ -13,6 +18,7 @@ namespace NetSharp
             : base(info, contex) { }
     }
 
+    // Нет комментариев, не ясно, ради чего оно нужно.
     [Serializable]
     public class AcceptorException : ApplicationException
     {
@@ -24,6 +30,7 @@ namespace NetSharp
             : base(info, contex) { }
     }
 
+    // Название исключения не несет никакого смысла.
     [Serializable]
     public class InitializationException : ApplicationException
     {

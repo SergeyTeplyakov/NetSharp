@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace NetSharp
 {
+    // ээээээ.... а чем простой лок не подходит?
     class SimpleLock : IDisposable
     {
         ManualResetEventSlim mres;
@@ -42,6 +43,9 @@ namespace NetSharp
 
         ~SimpleLock()
         {
+            // Это совсем неправильно. Почитай про Dispose паттерн.
+            // Есть и у меня на блоге.
+            // Но лучше - не городить огород.
             Dispose();
         }
     }

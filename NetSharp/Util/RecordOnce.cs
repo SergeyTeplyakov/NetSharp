@@ -2,6 +2,8 @@
 
 namespace NetSharp
 {
+    // Пока не понял, что это и зачем.
+    // Знаешь ли про Lazy<T>?
     class RecordOnce<T>
     {
         bool recorded;

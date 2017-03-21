@@ -72,6 +72,7 @@ namespace NetSharp
             time = TimeSpan.FromMinutes(Settings.TIME_WAITING_RECONNECT);
         }
 
+        // Должно быть WaitAsync
         public async Task BeginWaiting()
         {
             try
